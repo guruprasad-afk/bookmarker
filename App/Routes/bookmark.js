@@ -1,8 +1,8 @@
 const express = require("express");
 
 const {
-  AddBookmark,
-  DeleteBookmark,
+  addBookmark,
+  deleteBookmark,
   getAllBookmarks,
   getOneBookmark,
   addTagToBookmark,
@@ -11,13 +11,13 @@ const {
 
 const router = new express.Router();
 
-router.post("/", AddBookmark);
+router.post("/", addBookmark);
 
 router.patch("/addTag/:id", addTagToBookmark);
 
 router.patch("/deleteTag/:id", deleteTagFromBookmark);
 
-router.delete("/:id", DeleteBookmark);
+router.delete("/:id", deleteBookmark);
 
 router.get("/:id", getOneBookmark);
 

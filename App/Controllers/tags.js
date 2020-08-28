@@ -3,7 +3,7 @@ const Tag = require("./../Models/tags");
 //TO-DO Handle Mongo DB errors properly
 //TO-DO Add pagination features to fetching all tags
 
-const AddTag = async (req, res) => {
+const addTag = async (req, res) => {
   const tag = new Tag({
     title: req.body.title,
   });
@@ -22,7 +22,7 @@ const AddTag = async (req, res) => {
   }
 };
 
-const DeleteTag = async (req, res) => {
+const deleteTag = async (req, res) => {
   const id = req.params.id;
 
   try {
@@ -88,8 +88,8 @@ const getOneTag = async (req, res) => {
 };
 
 module.exports = {
-  AddTag,
-  DeleteTag,
+  addTag,
+  deleteTag,
   getAllTags,
   getOneTag,
 };

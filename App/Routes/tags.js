@@ -1,16 +1,16 @@
 const express = require("express");
 const {
-  AddTag,
-  DeleteTag,
+  addTag,
+  deleteTag,
   getAllTags,
   getOneTag,
 } = require("../Controllers/tags");
 
 const router = new express.Router();
 
-router.post("/", AddTag);
+router.post("/", addTag);
 
-router.delete("/:id", DeleteTag);
+router.delete("/:id", deleteTag);
 
 router.get("/:id", getOneTag);
 

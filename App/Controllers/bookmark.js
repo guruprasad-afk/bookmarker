@@ -4,7 +4,7 @@ ObjectId = require("mongodb").ObjectID;
 //TO-DO Handle Mongo DB errors properly
 //TO-DO Add pagination features to fetching all bookmarks
 
-const AddBookmark = async (req, res) => {
+const addBookmark = async (req, res) => {
   let tags = [];
 
   if (req.body.tags) {
@@ -39,7 +39,7 @@ const AddBookmark = async (req, res) => {
   }
 };
 
-const DeleteBookmark = async (req, res) => {
+const deleteBookmark = async (req, res) => {
   const id = req.params.id;
 
   try {
@@ -161,8 +161,8 @@ const deleteTagFromBookmark = async (req, res) => {
 };
 
 module.exports = {
-  AddBookmark,
-  DeleteBookmark,
+  addBookmark,
+  deleteBookmark,
   getAllBookmarks,
   getOneBookmark,
   addTagToBookmark,
