@@ -1,10 +1,22 @@
 const Bookmark = require("./../Models/bookmark");
+const mongoose = require("mongoose");
 ObjectId = require("mongodb").ObjectID;
 
-//TO-DO Handle Mongo DB errors properly
-//TO-DO Add pagination features to fetching all bookmarks
-
 const addBookmark = async (req, res) => {
+  if (!req.body.title) {
+    return res.status(400).send({
+      status: "Failure",
+      message: "Title is required",
+    });
+  }
+
+  if (!req.body.link) {
+    return res.status(400).send({
+      status: "Failure",
+      message: "Link is required",
+    });
+  }
+
   let tags = [];
 
   if (req.body.tags) {
@@ -30,6 +42,10 @@ const addBookmark = async (req, res) => {
         status: "Failure",
         message: error._message,
       });
+    } else if (error.name === "MongoError" && error.code === 11000) {
+      res
+        .status(404)
+        .send({ status: "Failure", message: "Link Already exists" });
     } else {
       res.status(400).send({
         status: "Failure",
@@ -41,6 +57,13 @@ const addBookmark = async (req, res) => {
 
 const deleteBookmark = async (req, res) => {
   const id = req.params.id;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).send({
+      status: "Failure",
+      message: "Given ID is not valid",
+    });
+  }
 
   try {
     const bookmark = await Bookmark.findByIdAndDelete(id);
@@ -83,6 +106,13 @@ const getAllBookmarks = async (req, res) => {
 const getOneBookmark = async (req, res) => {
   const id = req.params.id;
 
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).send({
+      status: "Failure",
+      message: "Given ID is not valid",
+    });
+  }
+
   try {
     const bookmark = await Bookmark.findById(id);
     if (bookmark) {
@@ -105,7 +135,21 @@ const getOneBookmark = async (req, res) => {
 };
 
 const addTagToBookmark = async (req, res) => {
+  if (!req.body.tags) {
+    return res.status(400).send({
+      status: "Failure",
+      message: "Tags is required",
+    });
+  }
+
   const id = req.params.id;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).send({
+      status: "Failure",
+      message: "Given ID is not valid",
+    });
+  }
 
   let tags = req.body.tags;
 
@@ -137,7 +181,21 @@ const addTagToBookmark = async (req, res) => {
 };
 
 const deleteTagFromBookmark = async (req, res) => {
+  if (!req.body.tags) {
+    return res.status(400).send({
+      status: "Failure",
+      message: "Tags is required",
+    });
+  }
+
   const id = req.params.id;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).send({
+      status: "Failure",
+      message: "Given ID is not valid",
+    });
+  }
 
   let tags = req.body.tags;
 

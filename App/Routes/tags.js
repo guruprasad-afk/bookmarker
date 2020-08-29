@@ -10,10 +10,10 @@ const router = new express.Router();
 
 router.post("/", addTag);
 
-router.delete("/:id", deleteTag);
+router.get("/", getAllTags);
 
 router.get("/:id", getOneTag);
 
-router.get("/", getAllTags);
+router.delete("/:id", deleteTag);
 
 module.exports = router;

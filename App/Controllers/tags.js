@@ -1,9 +1,14 @@
 const Tag = require("./../Models/tags");
-
-//TO-DO Handle Mongo DB errors properly
-//TO-DO Add pagination features to fetching all tags
+const mongoose = require("mongoose");
 
 const addTag = async (req, res) => {
+  if (!req.body.title) {
+    return res.status(400).send({
+      status: "Failure",
+      message: "Title is required",
+    });
+  }
+
   const tag = new Tag({
     title: req.body.title,
   });
@@ -15,15 +20,28 @@ const addTag = async (req, res) => {
       tag,
     });
   } catch (error) {
-    res.status(400).send({
-      status: "Failure",
-      message: "Server not responding. Try again later",
-    });
+    if (error.name === "MongoError" && error.code === 11000) {
+      res
+        .status(404)
+        .send({ status: "Failure", message: "Title Already exists" });
+    } else {
+      res.status(400).send({
+        status: "Failure",
+        message: "Server not responding. Try again later",
+      });
+    }
   }
 };
 
 const deleteTag = async (req, res) => {
   const id = req.params.id;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).send({
+      status: "Failure",
+      message: "Given ID is not valid",
+    });
+  }
 
   try {
     const tag = await Tag.findByIdAndDelete(id);
@@ -40,6 +58,7 @@ const deleteTag = async (req, res) => {
       });
     }
   } catch (error) {
+    console.log(error);
     res.status(500).send({
       status: "Failure",
       message: "Server not responding. Try again later",
@@ -66,8 +85,15 @@ const getAllTags = async (req, res) => {
 const getOneTag = async (req, res) => {
   const id = req.params.id;
 
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).send({
+      status: "Failure",
+      message: "Given ID is not valid",
+    });
+  }
+
   try {
-    const tag = await Tag.findById(id);
+    const tag = await Tag.findById(mongoose.Types.ObjectId(id));
     if (tag) {
       res.status(200).send({
         status: "Success",
